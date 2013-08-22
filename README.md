@@ -4,13 +4,13 @@ Fsm is pure functional finite state machine. Unlike `gen_fsm`, it doesn't run in
 
 ## Why?
 
-In the rare cases I needed a proper fsm, I most often wanted to use it inside the already existing process, next to the already existing state data. Creating another process didn't work for me, because that requires additional bookkeeping such as supervising and process linking. More importantly, fsm as a process implies mutability and side effects, which is harder to deal with. In addition, `gen_fsm` introduces more complicated protocol of cross-process communication such as `send_event`, `sync_send_event`, `send_all_state_event` and `sync_send_all_state_event`.
+In the rare cases I needed a proper fsm, I most often wanted to use it inside the already existing process, together with the already present state data. Creating another process didn't work for me because that requires additional bookkeeping such as supervising and process linking. More importantly, fsm as a process implies mutability and side effects, which is harder to deal with. In addition, `gen_fsm` introduces more complicated protocol of cross-process communication such as `send_event`, `sync_send_event`, `send_all_state_event` and `sync_send_all_state_event`.
 
 Unlike `gen_fsm`, the `Fsm` data structure has following benefits:
 
 * It is immutable and side-effect free
 * No need to create and manage separate processes
-* You can persist it, use it via ets, embed it inside `gen_server` or other processes
+* You can persist it, use it via ets, embed it inside `gen_server` or plain processes
 
 ## Basic example
 
@@ -35,7 +35,7 @@ end
 Usage:
 
 ```elixir
-# basic usage:
+# basic usage
 BasicFsm.new
 |> BasicFsm.run
 |> BasicFsm.stop
@@ -45,7 +45,7 @@ BasicFsm.new
 |> BasicFsm.run
 |> BasicFsm.run
 
-# You can query fsm for its state:
+# you can query fsm for its state:
 BasicFsm.new
 |> BasicFsm.run
 |> BasicFsm.state
@@ -92,16 +92,19 @@ defmodule BasicFsm do
   defstate stopped do
     defevent run, do: next_state(:running)
 
-    defevent _, do:              # called for undefined state/event mapping when inside stopped state
+    # called for undefined state/event mapping when inside stopped state
+    defevent _, do:
   end
 
   defstate running do
     defevent stop, do: next_state(:stopped)
   end
 
-  defevent some_event, do:       # called for some_event, regardless of the state
+  # called for some_event, regardless of the state
+  defevent some_event, do:
 
-  defevent _, do:                # called for undefined state/event mapping when inside any state
+  # called for undefined state/event mapping when inside any state
+  defevent _, do:
 end
 ```
 
@@ -175,7 +178,7 @@ MyFsm.another_event(fsm2, ...)
 You can also return some result and the modified fsm instance:
 ```elixir
 respond(response)                         # data and state remain the same
-respond(response, :new_state)              # data remains the same
+respond(response, :new_state)             # data remains the same
 respond(response, :new_state, new_data)
 ```
 
@@ -187,7 +190,7 @@ In this case, the result of calling the event is a two elements tuple:
 If the result of event handler is not created via `next_state` or `respond` it will be ignored, and the input fsm instance will be returned. This is useful when the event handler needs to perform some side-effect operations (file or network I/O) without changing the state or data.
 
 ## Dynamic definitions
-Fsm macros are runtime friendly, so you can define the machine dynamically:
+Fsm macros are runtime friendly, so you can buils your fsm dynamically:
 
 ```elixir
 defmodule DynamicFsm do
@@ -203,7 +206,7 @@ defmodule DynamicFsm do
   lc {state, transitions} inlist fsm do
     defstate unquote(state) do
       lc {event, target_state} inlist transitions do
-        defevent unquote(event), state: unquote(state), event: unquote(event) do
+        defevent unquote(event) do
           next_state(unquote(target_state))
         end
       end
@@ -212,8 +215,12 @@ defmodule DynamicFsm do
 end
 ```
 
-## Interface function
-Normally, `defevent` generates corresponding public interface function, which has the same name as the event. In addition, the multi-clause public `transition` function exists where all possible transitions are implemented. You can make interface function private:
+You might use this to define your fsm in the separate file, and in compile time read it and build the corresponding module.
+
+## Generated functions
+Normally, `defevent` generates corresponding public interface function, which has the same name as the event. In addition, the multi-clause public `transition` function exists where all possible transitions are implemented. Interface functions simply delegat to the `transition` function, and their purpose is simply to have nicer looking interface.
+
+You can make interface function private:
 
 ```elixir
 defeventp ...
@@ -225,10 +232,10 @@ The `transition` function is always public. It can be used for dynamic fsm manip
 MyFsm.transition(fsm, :my_event, [arg1, arg2])
 ```
 
-Notice that with `transition`, you can also use undefined events, and they will be caught by the global handlers.
+Notice that with `transition`, you can also use undefined events, and they will be caught by global handlers (if such exist).
 
 ## Extending the module
-Inside your module, you can add additional functions which manipulate the fsm. An fsm instance is represented by the private `fsm_rec` record:
+Inside your fsm module, you can add additional functions which manipulate the fsm. An fsm instance is represented by the private `fsm_rec` record:
 
 ```elixir
 def my_fun(fsm_rec() = fsm, ...), do:

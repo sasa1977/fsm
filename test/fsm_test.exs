@@ -313,7 +313,7 @@ defmodule FsmTest do
     lc {state, transitions} inlist fsm do
       defstate unquote(state) do
         lc {event, target_state} inlist transitions do
-          defevent unquote(event), state: unquote(state), event: unquote(event) do
+          defevent unquote(event) do
             next_state(unquote(target_state))
           end
         end
