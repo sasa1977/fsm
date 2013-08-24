@@ -123,12 +123,11 @@ defmodule Fsm do
       args_arg = unquote(Macro.escape(opts[:args] || quote(do: _), unquote: true))
       event_def = unquote(Macro.escape(event_def, unquote: true))
       guard = unquote(Macro.escape(opts[:when]))
-      if guard, do: guard = [guard], else: guard = []
     end
   end
 
   defp define_interface do
-    quote do
+    quote bind_quoted: [] do
       unless event_name == :_ or HashSet.member?(declared_events, {event_name, length(args)}) do
         interface_args = Enum.reduce(args, {0, []}, fn(_, {index, args}) ->
           {
@@ -139,14 +138,17 @@ defmodule Fsm do
         |> elem(1)
         |> Enum.reverse
 
-        body = [do: quote do
+        body = quote do
           transition(fsm, unquote(event_name), [unquote_splicing(interface_args)])
-        end]
+        end
 
         interface_args = [quote(do: fsm) | interface_args]
 
-        definer = if private, do: &defp/4, else: &def/4
-        apply(definer, [event_name, interface_args, [], body])
+        if private do
+          defp unquote(event_name)(unquote_splicing(interface_args)), do: unquote(body)
+        else
+          def unquote(event_name)(unquote_splicing(interface_args)), do: unquote(body)
+        end
 
         declared_events = HashSet.put(declared_events, {event_name, length(args)})
       end
@@ -154,7 +156,7 @@ defmodule Fsm do
   end
 
   defp implement_transition do
-    quote do
+    quote bind_quoted: [] do
       transition_args = [
         if state do
           quote do
@@ -175,14 +177,13 @@ defmodule Fsm do
         end
       ]
 
-      def(
-        :transition,
-        transition_args,
-        guard,
-        do: quote do
-          change_state(fsm, (unquote(event_def)))
-        end
-      )
+      body = quote(do: change_state(fsm, (unquote(event_def))))
+
+      if guard do
+        def transition(unquote_splicing(transition_args)) when unquote(guard), do: unquote(body)
+      else
+        def transition(unquote_splicing(transition_args)), do: unquote(body)
+      end
     end
   end
 end
