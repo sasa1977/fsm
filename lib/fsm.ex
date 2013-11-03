@@ -5,8 +5,8 @@ defmodule Fsm do
 
       defrecordp :fsm_rec, __MODULE__, [:state, :data]
 
-      state = nil
-      declared_events = HashSet.new
+      @declaring_state nil
+      @declared_events HashSet.new
 
       def new do
         fsm_rec(state: unquote(opts[:initial_state]), data: unquote(opts[:initial_data]))
@@ -52,9 +52,9 @@ defmodule Fsm do
         {name, _, _} -> name
       end
 
-      state = state_name
+      @declaring_state state_name
       unquote(state_def)
-      state = nil
+      @declaring_state nil
     end
   end
 
@@ -128,7 +128,7 @@ defmodule Fsm do
 
   defp define_interface do
     quote bind_quoted: [] do
-      unless event_name == :_ or HashSet.member?(declared_events, {event_name, length(args)}) do
+      unless event_name == :_ or HashSet.member?(@declared_events, {event_name, length(args)}) do
         interface_args = Enum.reduce(args, {0, []}, fn(_, {index, args}) ->
           {
             index + 1,
@@ -150,7 +150,7 @@ defmodule Fsm do
           def unquote(event_name)(unquote_splicing(interface_args)), do: unquote(body)
         end
 
-        declared_events = HashSet.put(declared_events, {event_name, length(args)})
+        @declared_events HashSet.put(@declared_events, {event_name, length(args)})
       end
     end
   end
@@ -158,9 +158,9 @@ defmodule Fsm do
   defp implement_transition do
     quote bind_quoted: [] do
       transition_args = [
-        if state do
+        if @declaring_state do
           quote do
-            fsm_rec(state: unquote(state) = unquote(state_arg), data: unquote(data_arg)) = fsm
+            fsm_rec(state: unquote(@declaring_state) = unquote(state_arg), data: unquote(data_arg)) = fsm
           end
         else
           quote do
