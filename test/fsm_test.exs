@@ -33,9 +33,9 @@ defmodule FsmTest do
       |> BasicFsm.stop
       |> BasicFsm.state == :stopped)
 
-    assert_raise(FunctionClauseError, fn -> 
-      BasicFsm.new 
-      |> BasicFsm.run 
+    assert_raise(FunctionClauseError, fn ->
+      BasicFsm.new
+      |> BasicFsm.run
       |> BasicFsm.run
     end)
   end
@@ -135,7 +135,7 @@ defmodule FsmTest do
 
   test "data" do
     assert(
-      DataFsm.new 
+      DataFsm.new
       |> DataFsm.data == 0
     )
 
@@ -199,8 +199,8 @@ defmodule FsmTest do
     assert(ResponseFsm.state(fsm2) == :invalid)
 
     assert(
-      ResponseFsm.new 
-      |> ResponseFsm.stop == {:error, {FsmTest.ResponseFsm, :stopped, 0}}
+      ResponseFsm.new
+      |> ResponseFsm.stop == {:error, %ResponseFsm{data: 0, state: :stopped}}
     )
   end
 
@@ -273,13 +273,13 @@ defmodule FsmTest do
     assert(
       PatternMatch.new
       |> PatternMatch.stop
-      |> PatternMatch.dummy == {:dummy, {FsmTest.PatternMatch, :stopped, 10}}
+      |> PatternMatch.dummy == {:dummy, %PatternMatch{data: 10, state: :stopped}}
     )
 
     assert(
       PatternMatch.new
       |> PatternMatch.stop
-      |> PatternMatch.toggle_speed == {:error, {FsmTest.PatternMatch, :stopped, 10}}
+      |> PatternMatch.toggle_speed == {:error, %PatternMatch{data: 10, state: :stopped}}
     )
 
     assert_raise(FunctionClauseError, fn ->
@@ -337,9 +337,9 @@ defmodule FsmTest do
       |> DynamicFsm.stop
       |> DynamicFsm.state == :stopped)
 
-    assert_raise(FunctionClauseError, fn -> 
-      DynamicFsm.new 
-      |> DynamicFsm.run 
+    assert_raise(FunctionClauseError, fn ->
+      DynamicFsm.new
+      |> DynamicFsm.run
       |> DynamicFsm.run
     end)
   end
