@@ -68,7 +68,7 @@ defmodule DataFsm do
     defevent slowdown(by), data: speed do     # you can pattern match data with dedicated option
       next_state(:running, speed - by)
     end
-    
+
     defevent stop do
       next_state(:stopped, 0)
     end
@@ -134,7 +134,7 @@ Pattern matching works with event arguments, and all available options:
 defstate some_state do
   defevent event(1), do:
   defevent event(2), do:
-  
+
   defevent event(x), state: 0, do:
   defevent event(x), state: 1, do:
 end
@@ -203,9 +203,9 @@ defmodule DynamicFsm do
   ]
 
   # loop through definition and dynamically call defstate/defevent
-  lc {state, transitions} inlist fsm do
+  for {state, transitions} <- fsm do
     defstate unquote(state) do
-      lc {event, target_state} inlist transitions do
+      for {event, target_state} <- transitions do
         defevent unquote(event) do
           next_state(unquote(target_state))
         end
@@ -251,7 +251,7 @@ defmodule BasicFsmServer do
   def init(_), do: initial_state(BasicFsm.new)
 
   # dynamic wrapping of zero arity events inside casts
-  lc event inlist [:run, :stop] do
+  for event <- [:run, :stop] do
     defcast unquote(event), state: fsm do
       BasicFsm.unquote(event)(fsm)
       |> new_state

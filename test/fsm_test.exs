@@ -310,9 +310,9 @@ defmodule FsmTest do
       running: [stop: :stopped]
     ]
 
-    lc {state, transitions} inlist fsm do
+    for {state, transitions} <- fsm do
       defstate unquote(state) do
-        lc {event, target_state} inlist transitions do
+        for {event, target_state} <- transitions do
           defevent unquote(event) do
             next_state(unquote(target_state))
           end
