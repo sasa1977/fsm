@@ -12,9 +12,7 @@ defmodule Fsm.Mixfile do
         licenses: ["MIT"],
         links: [{"Github", "https://github.com/sasa1977/fsm"}]
       ],
-      description: """
-        Finite state machine as a functional data structure.
-      """
+      description: "Finite state machine as a functional data structure."
     ]
   end
 
