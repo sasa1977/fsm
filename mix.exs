@@ -4,20 +4,20 @@ defmodule Fsm.Mixfile do
   def project do
     [
       app: :fsm,
-      version: "0.0.2",
-      elixir: ">= 0.13.0",
+      version: "0.1.0",
+      elixir: ">= 1.0.0-rc1",
       deps: deps,
       package: [
         contributors: ["Saša Jurić"],
         licenses: ["MIT"],
-        links: [{"Github", "https://github.com/sasa1977/fsm"}]
+        links: %{"Github": "https://github.com/sasa1977/fsm"}
       ],
       description: "Finite state machine as a functional data structure."
     ]
   end
 
   def application do
-    []
+    [applications: [:logger]]
   end
 
   defp deps do

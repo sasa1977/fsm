@@ -34,6 +34,12 @@ end
 
 Usage:
 
+Be sure to include a dependency in your mix.exs:
+
+```elixir
+deps: [{:fsm, "~> 0.1.0"}, ...]
+```
+
 ```elixir
 # basic usage
 BasicFsm.new
