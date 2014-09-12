@@ -37,7 +37,7 @@ Usage:
 Be sure to include a dependency in your mix.exs:
 
 ```elixir
-deps: [{:fsm, "~> 0.1.0"}, ...]
+deps: [{:fsm, "~> 0.2.0"}, ...]
 ```
 
 ```elixir
