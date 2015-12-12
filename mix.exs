@@ -5,10 +5,10 @@ defmodule Fsm.Mixfile do
     [
       app: :fsm,
       version: "0.2.0",
-      elixir: ">= 1.0.0",
+      elixir: "~> 1.0",
       deps: deps,
       package: [
-        contributors: ["Saša Jurić"],
+        maintainers: ["Saša Jurić"],
         licenses: ["MIT"],
         links: %{"Github": "https://github.com/sasa1977/fsm"}
       ],
