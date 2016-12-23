@@ -6,7 +6,7 @@ defmodule Fsm do
       defstruct [:state, :data]
 
       @declaring_state nil
-      @declared_events HashSet.new
+      @declared_events MapSet.new
 
       def new do
         %__MODULE__{state: unquote(opts[:initial_state]), data: unquote(opts[:initial_data])}
@@ -128,7 +128,7 @@ defmodule Fsm do
 
   defp define_interface do
     quote bind_quoted: [] do
-      unless event_name == :_ or HashSet.member?(@declared_events, {event_name, length(args)}) do
+      unless event_name == :_ or MapSet.member?(@declared_events, {event_name, length(args)}) do
         interface_args = Enum.reduce(args, {0, []}, fn(_, {index, args}) ->
           {
             index + 1,
@@ -150,7 +150,7 @@ defmodule Fsm do
           def unquote(event_name)(unquote_splicing(interface_args)), do: unquote(body)
         end
 
-        @declared_events HashSet.put(@declared_events, {event_name, length(args)})
+        @declared_events MapSet.put(@declared_events, {event_name, length(args)})
       end
     end
   end
