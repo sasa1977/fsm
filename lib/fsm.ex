@@ -80,7 +80,7 @@ defmodule Fsm do
       end
 
       private = unquote(private)
-      unquote(define_interface)
+      unquote(define_interface())
     end
   end
 
@@ -103,8 +103,8 @@ defmodule Fsm do
   defp do_defevent(event_decl, opts, event_def) do
     quote do
       unquote(extract_args(event_decl, opts, event_def))
-      unquote(define_interface)
-      unquote(implement_transition)
+      unquote(define_interface())
+      unquote(implement_transition())
     end
   end
 
