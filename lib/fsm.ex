@@ -3,7 +3,8 @@ defmodule Fsm do
     quote do
       import Fsm
 
-      defstruct [:state, :data]
+      defstruct [state: unquote(opts[:initial_state]),
+                 data:  unquote(opts[:initial_data])]
 
       @declaring_state nil
       @declared_events MapSet.new
