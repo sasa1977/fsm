@@ -10,7 +10,7 @@ defmodule Fsm do
       @declared_events MapSet.new
 
       def new do
-        %__MODULE__{state: unquote(opts[:initial_state]), data: unquote(opts[:initial_data])}
+        %__MODULE__{}
       end
 
       def state(%__MODULE__{state: state}), do: state
