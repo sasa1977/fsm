@@ -4,7 +4,7 @@ defmodule Fsm.Mixfile do
   def project do
     [
       app: :fsm,
-      version: "0.2.0",
+      version: "0.3.0",
       elixir: "~> 1.1",
       deps: deps(),
       package: [
