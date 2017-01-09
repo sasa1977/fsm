@@ -5,7 +5,7 @@ defmodule Fsm.Mixfile do
     [
       app: :fsm,
       version: "0.2.0",
-      elixir: "~> 1.0",
+      elixir: "~> 1.1",
       deps: deps(),
       package: [
         maintainers: ["Saša Jurić"],
