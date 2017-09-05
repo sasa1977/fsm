@@ -40,6 +40,12 @@ defmodule FsmTest do
     end)
   end
 
+  test "initialize with other state" do
+    assert (
+      BasicFsm.new(:running)
+      |> BasicFsm.state == :running)
+  end
+
 
 
   defmodule PrivateFsm do
