@@ -13,8 +13,16 @@ defmodule Fsm do
         %__MODULE__{}
       end
 
-      def new(initial_state) do
+      def new(state: initial_state) do
         %{%__MODULE__{} | state: initial_state}
+      end
+
+      def new(data: initial_data) do
+        %{%__MODULE__{} | data: initial_data}
+      end
+
+      def new(state: initial_state, data: initial_data) do
+        %{%__MODULE__{} | state: initial_state, data: initial_data}
       end
 
       def state(%__MODULE__{state: state}), do: state

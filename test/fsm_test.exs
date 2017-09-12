@@ -42,7 +42,7 @@ defmodule FsmTest do
 
   test "initialize with other state" do
     assert (
-      BasicFsm.new(:running)
+      BasicFsm.new(state: :running)
       |> BasicFsm.state == :running)
   end
 
@@ -163,6 +163,27 @@ defmodule FsmTest do
       |> DataFsm.run(50)
       |> DataFsm.stop
       |> DataFsm.data == 0
+    )
+  end
+
+  test "initialize with other data" do
+    assert(
+      DataFsm.new(data: 42)
+      |> DataFsm.data == 42
+    )
+  end
+
+  test "initialize with other state and data" do
+    fsm = DataFsm.new(state: :running, data: 42)
+
+    assert(
+      fsm
+      |> DataFsm.state == :running
+    )
+
+    assert(
+      fsm
+      |> DataFsm.data == 42
     )
   end
 
