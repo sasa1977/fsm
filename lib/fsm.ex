@@ -9,9 +9,7 @@ defmodule Fsm do
       @declaring_state nil
       @declared_events MapSet.new
 
-      def new do
-        %__MODULE__{}
-      end
+      def new(params \\ []), do: struct!(__MODULE__, params)
 
       def state(%__MODULE__{state: state}), do: state
       def data(%__MODULE__{data: data}), do: data
