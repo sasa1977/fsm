@@ -196,7 +196,7 @@ In this case, the result of calling the event is a two elements tuple:
 If the result of event handler is not created via `next_state` or `respond` it will be ignored, and the input fsm instance will be returned. This is useful when the event handler needs to perform some side-effect operations (file or network I/O) without changing the state or data.
 
 ## Dynamic definitions
-Fsm macros are runtime friendly, so you can buils your fsm dynamically:
+Fsm macros are runtime friendly, so you can build your fsm dynamically:
 
 ```elixir
 defmodule DynamicFsm do
@@ -224,7 +224,7 @@ end
 You might use this to define your fsm in the separate file, and in compile time read it and build the corresponding module.
 
 ## Generated functions
-Normally, `defevent` generates corresponding public interface function, which has the same name as the event. In addition, the multi-clause public `transition` function exists where all possible transitions are implemented. Interface functions simply delegat to the `transition` function, and their purpose is simply to have nicer looking interface.
+Normally, `defevent` generates corresponding public interface function, which has the same name as the event. In addition, the multi-clause public `transition` function exists where all possible transitions are implemented. Interface functions simply delegate to the `transition` function, and their purpose is simply to have nicer looking interface.
 
 You can make interface function private:
 
