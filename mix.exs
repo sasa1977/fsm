@@ -10,7 +10,7 @@ defmodule Fsm.Mixfile do
       package: [
         maintainers: ["Saša Jurić"],
         licenses: ["MIT"],
-        links: %{"Github": "https://github.com/sasa1977/fsm"}
+        links: %{Github: "https://github.com/sasa1977/fsm"}
       ],
       description: "Finite state machine as a functional data structure."
     ]
