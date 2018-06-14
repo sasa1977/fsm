@@ -14,6 +14,10 @@ defmodule Fsm do
       def state(%__MODULE__{state: state}), do: state
       def data(%__MODULE__{data: data}), do: data
 
+      # We need to suppress dialyzer warning, since in the second clause might
+      # never match. This can happen if every single event handler uses `Fsm`
+      # functions to explicitly set the next state.
+      @dialyzer {:no_match, change_state: 2}
       defp change_state(%__MODULE__{} = fsm, {:action_responses, responses}),
         do: parse_action_responses(fsm, responses)
 
