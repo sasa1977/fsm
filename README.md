@@ -1,5 +1,7 @@
 # Fsm
 
+**This project is not maintained anymore, and I don't advise using it. Pure functional FSMs are still my preferred approach (as opposed to gen_statem), but you don't need this library for that. Regular data structures, such as maps or structs, with pattern matching in multiclauses will serve you just fine.**
+
 Fsm is pure functional finite state machine. Unlike `gen_fsm`, it doesn't run in its own process. Instead, it is a functional data structure.
 
 ## Why?
